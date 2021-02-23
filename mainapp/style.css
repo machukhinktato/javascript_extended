@@ -1,41 +1,34 @@
-* {
-    margin: 0;
-    padding: 0;
+.txt {
+    margin-top: 15px;
+    font-family: 'Tangerine', serif;
+    font-size: 30px;
+    text-align: center;
 }
 
-/*.container {*/
-/*    width: 1140px;*/
-/*    margin: 0 auto;*/
+/** {*/
+/*    margin: 0;*/
 /*    padding: 0;*/
-/*    box-sizing: border-box;*/
-/*    align-items: baseline;*/
 /*}*/
 
-.goods-list {
-    display: flex;
-    justify-content: center;
-    padding: 45px 45px;
-    margin-top: 30px;
-    text-align: center;
-    font-family: 'Tangerine', serif;
-    font-size: 40px;
-}
+/*.goods-list {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    padding: 45px 45px;*/
+/*    margin-top: 30px;*/
+/*    text-align: center;*/
+/*    font-family: 'Tangerine', serif;*/
+/*    font-size: 40px;*/
+/*}*/
 
-.img {
-    height: 350px;
-}
+/*.img {*/
+/*    height: 350px;*/
+/*}*/
 
-.shop-name {
-    font-family: 'Tangerine', serif;
-    font-size: 40px;
-}
+/*.shop-name {*/
+/*    font-family: 'Tangerine', serif;*/
+/*    font-size: 40px;*/
+/*}*/
 
-.navContainer {
-    text-align: center;
-    font-family: 'Tangerine', serif;
-    font-size: 40px;
-}
-
-.text {
-    margin-top: 20px;
-}
+/*.text {*/
+/*    margin-top: 20px;*/
+/*}*/

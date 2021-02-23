@@ -5,8 +5,13 @@ const goods = [
     {title: 'Shoes', price: 250, image: "https://a.lmcdn.ru/product/D/R/DR004AUKPTG7_11968908_1_v2.jpg"},
 ];
 
-const renderGoodsItem = (title, price, image) => `<div class="goods-item"><img src="${image}" alt="picture" class="img">
-<div class="text"><p><b>${title}</b></p><p>${price} usd</p></div></div>`;
+const renderGoodsItem = (title, price, image) => `
+<div class="col-3" style="width: 270px;">
+<img src="${image}" alt="picture" height="250" class="img">
+<div ><p class="txt"><b>${title}</b></p>
+<p class="txt">${price} usd</p>
+</div>
+</div>`;
 
 const renderGoodsList = (list) => {
     let goodsList = list.map(item => renderGoodsItem(item.title, item.price, item.image));
