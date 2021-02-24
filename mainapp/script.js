@@ -6,13 +6,6 @@ const goods = [
 ];
 
 const renderGoodsItem = (title, price, image) => `
-
-<!--<div class="col-3" style="width: 270px;">-->
-<!--<img src="${image}" alt="picture" height="250" class="img">-->
-<!--<div ><p class="txt"><b>${title}</b></p>-->
-<!--<p class="txt">${price} usd</p>-->
-<!--</div>-->
-
 <div class="card" style="width: 18rem;">
   <img class="card-img-top" src="${image}" alt="Card image cap">
   <div class="card-body text-center">
@@ -21,13 +14,7 @@ const renderGoodsItem = (title, price, image) => `
     <a href="#" class="btn btn-outline-secondary">check details</a>
   </div>
 </div>
-
-
-
-
-
 `;
-
 
 const renderGoodsList = (list) => {
     let goodsList = list.map(item => renderGoodsItem(item.title, item.price, item.image));
