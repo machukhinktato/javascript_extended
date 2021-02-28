@@ -7,6 +7,7 @@ class Hamburger {
         this.infoAboutCalories = undefined;
         this.selectSize()
     }
+
     selectSize() {
         let answer = prompt('small or large?');
         console.log(this.hamburgerSize[answer]);
@@ -14,11 +15,23 @@ class Hamburger {
         this.infoAboutCalories = this.hamburgerSize[answer][1];
         this.selectTopping()
     }
+
     selectTopping() {
         console.log(this.toppingList);
         let answer = prompt('with which topping? (cheese, salad, potato)')
         console.log(this.toppingList[answer]);
         this.infoAboutPrice += this.toppingList[answer][0]
         this.infoAboutCalories += this.toppingList[answer][1]
+        this.selectCondiments()
+    }
+    selectCondiments() {
+        console.log(this.condimentList);
+        let answer = prompt('do you want add condiments? (y/n)')
+        if (answer === 'yes') {
+            answer = prompt('which one?')
+            console.log(this.condimentList[answer]);
+            this.infoAboutPrice += this.condimentList[answer][0]
+            this.infoAboutCalories += this.condimentList[answer][1]
+        }
     }
 }
