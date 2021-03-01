@@ -32,12 +32,63 @@ class GoodsList {
         ];
     }
 
+    totalPrice() {
+        let totalSum = 0;
+        this.goods.forEach(elem => {
+                totalSum += elem.price
+            }
+        );
+        return totalSum;
+    };
+
     render() {
         const goodsString = this.goods.map(element => {
             const item = new GoodsItem(element);
             return item.render();
         });
         document.querySelector('.goods-list').innerHTML = goodsString.join('');
+    }
+}
+
+class Basket {
+
+    fetchData() {
+        // запрос данных с сервера
+    }
+
+    calculateSum() {
+        // общее кол-во товаров и их общая цена
+    }
+
+    pay() {
+        // оплатить заказ
+    }
+
+    render() {
+        // отобразить  корзину
+    }
+}
+
+class BasketItem {
+
+    details() {
+        // возможность взглянуть на каждый товар углубленно
+    }
+
+    incerementQua() {
+        // увеличить уменьшить количество
+    }
+
+    remove() {
+        // удалить из корзины
+    }
+
+    onDelay() {
+        // отложить товар из покупаемых, но продолжать отслеживать его
+    }
+
+    render() {
+        // отобразить товар в корзине, его стоимость и кол-во повторений позиции
     }
 }
 
