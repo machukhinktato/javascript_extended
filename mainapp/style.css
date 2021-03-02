@@ -8,3 +8,11 @@
 .text-responsive {
     font-size: calc(15% + 0.8vw + 0.8vh);
 }
+
+.content {
+    min-height: calc(100vh - 70px);
+}
+
+.footer {
+    height: 50px;
+}
