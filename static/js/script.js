@@ -28,7 +28,7 @@ const promiseRequest = (path = '', method = 'GET', body) => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         console.log({response: xhr.responseText});
-                        resolve(JSON.parse(xhr.responseText));
+                        resolve(JSON.stringify(xhr.responseText));
                     } else {
                         console.error(xhr.responseText);
                         reject(new Error);
@@ -75,8 +75,11 @@ class GoodsList {
 
     fetchData() {
         promiseRequest('catalogData.json')
-            .then((goods) => {
-                return this.goods = goods;
+            .then((answerFromServer) => {
+                // answerFromServer.ForEach( e => {
+                console.log(typeof(answerFromServer))
+                // console.log(`banana = ${JSON.stringify(answerFromServer)}`)
+                return this.goods = answerFromServer;
             })
             .catch((error) => {
                 console.log(error);
@@ -173,3 +176,4 @@ const list = new GoodsList();
 list.fetchData();
 list.render();
 list.getTotalPrice();
+console.log(list.goods);
