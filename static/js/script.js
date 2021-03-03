@@ -1,26 +1,26 @@
 const API_ROOT = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-const request = (path = '', callback, method = 'GET', body) => {
-    const xhr = new XMLHttpRequest();
+// const request = (path = '', callback, method = 'GET', body) => {
+//     const xhr = new XMLHttpRequest();
+//
+//     xhr.onreadystatechange = () => {
+//         if (xhr.readyState === 4) {
+//             if (xhr.status === 200) {
+//                 console.log({response: xhr.responseText});
+//                 callback(JSON.parse(xhr.responseText));
+//             } else {
+//                 console.error(xhr.responseText);
+//             }
+//         }
+//     }
+//
+//     xhr.open(method, `${API_ROOT}/${path}`);
+//
+//     xhr.send(body);
+// }
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                console.log({response: xhr.responseText});
-                callback(JSON.parse(xhr.responseText));
-            } else {
-                console.error(xhr.responseText);
-            }
-        }
-    }
-
-    xhr.open(method, `${API_ROOT}/${path}`);
-
-    xhr.send(body);
-}
-
-const promiseRequest = (xhr) => {
-    return new Promise((resolve, reject, xhr) => {
+const promiseRequest = (path = '', method = 'GET', body) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
             const xhr = new XMLHttpRequest();
 
@@ -34,24 +34,24 @@ const promiseRequest = (xhr) => {
                         reject(new Error);
                     }
                 }
-                return xhr
             }
+            xhr.open(method, `${API_ROOT}/${path}`);
+            xhr.send(body);
         }, 1000)
     });
 }
 
 
-
-promiseRequest()
-    .then(
-        (path='', method='GET', body) => {
-            xhr.open(method, open(`${API_ROOT}/${path}`));
-            xhr.send(body);
-        }
-    )
-    .catch((dataFromReject) => {
-            console.log(dataFromReject);
-        });
+// promiseRequest()
+//     .then(
+//         (path='', method='GET', body) => {
+//             xhr.open(method, open(`${API_ROOT}/${path}`));
+//             xhr.send(body);
+//         }
+//     )
+//     .catch((dataFromReject) => {
+//             console.log(dataFromReject);
+//         });
 
 class GoodsItem {
     constructor(item) {
@@ -73,11 +73,18 @@ class GoodsList {
         this.goods = [];
     }
 
-    fetchData(callback) {
-        request('catalogData.json', (goods) => {
-            this.goods = goods;
-            callback();
-        });
+    fetchData() {
+        promiseRequest('catalogData.json')
+            .then((goods) => {
+                return this.goods = goods;
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        // request('catalogData.json', (goods) => {
+        //     this.goods = goods;
+        //     callback();
+        // });
     }
 
     getTotalPrice() {
@@ -163,7 +170,6 @@ class BasketItem {
 
 
 const list = new GoodsList();
-list.fetchData(() => {
-    list.render();
-    list.getTotalPrice();
-});
+list.fetchData();
+list.render();
+list.getTotalPrice();
