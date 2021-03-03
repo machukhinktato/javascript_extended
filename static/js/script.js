@@ -19,6 +19,40 @@ const request = (path = '', callback, method = 'GET', body) => {
     xhr.send(body);
 }
 
+const promiseRequest = (xhr) => {
+    return new Promise((resolve, reject, xhr) => {
+        setTimeout(() => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log({response: xhr.responseText});
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        console.error(xhr.responseText);
+                        reject(new Error);
+                    }
+                }
+                return xhr
+            }
+        }, 1000)
+    });
+}
+
+
+
+promiseRequest()
+    .then(
+        (path='', method='GET', body) => {
+            xhr.open(method, open(`${API_ROOT}/${path}`));
+            xhr.send(body);
+        }
+    )
+    .catch((dataFromReject) => {
+            console.log(dataFromReject);
+        });
+
 class GoodsItem {
     constructor(item) {
         this.item = item;
