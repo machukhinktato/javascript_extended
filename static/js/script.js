@@ -70,12 +70,16 @@ class Basket {
         this.basket = []
     }
 
+    add(item) {
+        this.basket = item
+    }
+
     fetchData() {
         promisedRequest('getBasket.json')
             .then((answerFromServer) => {
                 this.basket = JSON.parse(answerFromServer);
                 this.render()
-                return this.basket;
+                this.add(JSON.parse(answerFromServer));
             })
             .catch((error) => {
                 console.log(error);
@@ -83,10 +87,40 @@ class Basket {
     }
 
     addItem(item) {
+        // console.log(this.basket)
         promisedRequest('getBasket.json')
             .then((answerFromServer) => {
-                this.basket.contents.forEach(elem => { if (Number(item) === elem.id_product){console.log('uspekh')}})
+                this.basket = JSON.parse(answerFromServer);
+                // console.log(this.basket.contents[0]);
+                // console.log(JSON.parse(answerFromServer));
+                this.basket.contents.forEach((element) => {
+                    let count = 0
+                    console.log(this.basket);
+                    if (element.id_product === item.id_product) {
+                        console.log(this.basket)
+                        this.basket.contents[count++].quantity += 1;
+                        // console.log(this.basket.contents)
+                        // console.log(this.basket[element])
+                        // count++
+                        // console.log(this.basket.contents[count++])
+                        return this.basket
+                    }
+
+                })
+
+
+                // })
+                // if (this.basket.id_product.includes(item.id_product)) {
+                //     this.basket.quantity += 1;
+                // }
+                // console.log(item.id_product in this.basket.id_product);
+                // console.log(this.basket.contents.forEach(element => console.log(element)))
+                // forEach(elem => { if (Number(item) === elem.id_product){console.log('uspekh')}})
             })
+            .catch((error) => {
+                console.log(error);
+            })
+        // return this.basket
 
     }
 
@@ -119,7 +153,8 @@ class Basket {
     }
 
     render() {
-        const basketString = this.goods.map(element => {
+        console.log(this.basket);
+        const basketString = this.basket.contents.map(element => {
             const item = new BasketItem(element);
             return item.render();
         });
@@ -152,6 +187,7 @@ class BasketItem {
             <div class="item">
                 <h2>${this.item.product_name}</h2>
                 <p>${this.item.price}</p>
+                <p>${this.item.quantity}</p>
             </div>
         `;
     }
@@ -164,4 +200,6 @@ list.getTotalPrice();
 console.log(list);
 cart = new Basket();
 cart.fetchData()
-console.log(cart.addItem('123'));
+a = {id_product: 123, product_name: "Ноутбук", price: 45600, quantity: 3}
+cart.addItem(a);
+console.log(cart.basket)
