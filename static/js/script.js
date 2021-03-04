@@ -14,7 +14,6 @@ const promisedRequest = (path = '', method = 'GET', body) => {
 class GoodsItem {
     constructor(item) {
         this.item = item;
-        console.log(this.item)
     }
 
     render() {
@@ -38,14 +37,7 @@ class GoodsList {
             .then((answerFromServer) => {
                 this.goods = JSON.parse(answerFromServer);
                 this.render()
-                // return this.goods;
             })
-            // .then((answerFromServer) => {
-            //     console.log(this.goods);
-            //     this.goods = JSON.parse(answerFromServer);
-            //     // this.getTotalPrice()
-            //     return this.goods
-            // })
             .catch((error) => {
                 console.log(error);
             })
@@ -55,27 +47,16 @@ class GoodsList {
         promisedRequest('catalogData.json')
             .then((answerFromServer) => {
                 this.goods = JSON.parse(answerFromServer);
-                const sum = this.goods.reduce(
+                this.sumOfGoods = this.goods.reduce(
                     (accumulator, currentElement) => accumulator + currentElement.price,
                     0
                 );
-                this.sumOfGoods = sum;
             })
-        // console.log(sum);
-        // return this.sum
-        // console.log(this.goods);
-        // const sum = this.goods.reduce(
-        //     (accumulator, currentElement) => accumulator + currentElement.price,
-        //     0
-        // );
-        // console.log(sum)
     }
 
     render() {
         const goodsString = this.goods.map(element => {
-
             const item = new GoodsItem(element);
-
             return item.render();
         });
         document.querySelector('.goods-list').innerHTML = goodsString.join(' ');
@@ -84,12 +65,28 @@ class GoodsList {
 
 
 class Basket {
-    fetchData() {
-        // запрос данных с сервера
+
+    constructor() {
+        this.basket = []
     }
 
-    addItem() {
+    fetchData() {
+        promisedRequest('getBasket.json')
+            .then((answerFromServer) => {
+                this.basket = JSON.parse(answerFromServer);
+                this.render()
+                return this.basket;
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
 
+    addItem(item) {
+        promisedRequest('getBasket.json')
+            .then((answerFromServer) => {
+                this.basket.contents.forEach(elem => { if (Number(item) === elem.id_product){console.log('uspekh')}})
+            })
 
     }
 
@@ -122,12 +119,21 @@ class Basket {
     }
 
     render() {
+        const basketString = this.goods.map(element => {
+            const item = new BasketItem(element);
+            return item.render();
+        });
+        document.querySelector('.goods-list').innerHTML = basketString.join(' ');
 
     }
 }
 
 
 class BasketItem {
+
+    constructor(item) {
+        this.item = item;
+    }
 
     changeType() {
 
@@ -142,13 +148,20 @@ class BasketItem {
     }
 
     render() {
-
+        return `
+            <div class="item">
+                <h2>${this.item.product_name}</h2>
+                <p>${this.item.price}</p>
+            </div>
+        `;
     }
 }
 
 
 const list = new GoodsList();
 list.fetchData();
-// list.render();
 list.getTotalPrice();
 console.log(list);
+cart = new Basket();
+cart.fetchData()
+console.log(cart.addItem('123'));
