@@ -21,27 +21,28 @@ const API_ROOT = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-st
 
 const promiseRequest = (path = '', method = 'GET', body) => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        console.log({response: xhr.responseText});
-                        resolve(JSON.stringify(xhr.responseText));
-                    } else {
-                        console.error(xhr.responseText);
-                        reject(new Error);
-                    }
-                }
-            }
-            xhr.open(method, `${API_ROOT}/${path}`);
-            xhr.send(body);
-        }, 1000)
+        // setTimeout(() => {
+        const xhr = new XMLHttpRequest();
+        // xhr.onreadystatechange = () => {
+        //     if (xhr.readyState === 4) {
+        //         if (xhr.status === 200) {
+        //             console.log({response: xhr.responseText});
+        //             resolve(JSON.stringify(xhr.responseText));
+        //         } else {
+        //             console.error(xhr.responseText);
+        //             reject(new Error);
+        //         }
+        //     }
+        // }
+        xhr.open(method, `${API_ROOT}/${path}`);
+        xhr.onload = () => resolve(xhr.responseText);
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send()
+        // },)
     });
 }
 
-
+var banana = undefined;
 // promiseRequest()
 //     .then(
 //         (path='', method='GET', body) => {
@@ -56,6 +57,7 @@ const promiseRequest = (path = '', method = 'GET', body) => {
 class GoodsItem {
     constructor(item) {
         this.item = item;
+        console.log(this.item)
     }
 
     render() {
@@ -77,9 +79,16 @@ class GoodsList {
         promiseRequest('catalogData.json')
             .then((answerFromServer) => {
                 // answerFromServer.ForEach( e => {
-                console.log(typeof(answerFromServer))
+                this.goods = JSON.parse(answerFromServer);
+                banana = JSON.parse(answerFromServer);
+                console.log(this.goods)
+                this.render()
+                // banana = answerFromServer;
+                // console.log(banana);
+                // console.log(this.goods);
+                // console.log(JSON.parse(answerFromServer))
                 // console.log(`banana = ${JSON.stringify(answerFromServer)}`)
-                return this.goods = answerFromServer;
+                // JSON.parse(answerFromServer).forEach(element => {this.goods = element});
             })
             .catch((error) => {
                 console.log(error);
@@ -99,8 +108,11 @@ class GoodsList {
     }
 
     render() {
+        // console.log(this.goods)
         const goodsString = this.goods.map(element => {
+
             const item = new GoodsItem(element);
+
             return item.render();
         });
         document.querySelector('.goods-list').innerHTML = goodsString.join(' ');
@@ -174,6 +186,6 @@ class BasketItem {
 
 const list = new GoodsList();
 list.fetchData();
-list.render();
-list.getTotalPrice();
-console.log(list.goods);
+// list.render();
+// list.getTotalPrice();
+console.log(list);
