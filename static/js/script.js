@@ -1,58 +1,15 @@
 const API_ROOT = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-// const request = (path = '', callback, method = 'GET', body) => {
-//     const xhr = new XMLHttpRequest();
-//
-//     xhr.onreadystatechange = () => {
-//         if (xhr.readyState === 4) {
-//             if (xhr.status === 200) {
-//                 console.log({response: xhr.responseText});
-//                 callback(JSON.parse(xhr.responseText));
-//             } else {
-//                 console.error(xhr.responseText);
-//             }
-//         }
-//     }
-//
-//     xhr.open(method, `${API_ROOT}/${path}`);
-//
-//     xhr.send(body);
-// }
-
-const promiseRequest = (path = '', method = 'GET', body) => {
+const promisedRequest = (path = '', method = 'GET', body) => {
     return new Promise((resolve, reject) => {
-        // setTimeout(() => {
         const xhr = new XMLHttpRequest();
-        // xhr.onreadystatechange = () => {
-        //     if (xhr.readyState === 4) {
-        //         if (xhr.status === 200) {
-        //             console.log({response: xhr.responseText});
-        //             resolve(JSON.stringify(xhr.responseText));
-        //         } else {
-        //             console.error(xhr.responseText);
-        //             reject(new Error);
-        //         }
-        //     }
-        // }
         xhr.open(method, `${API_ROOT}/${path}`);
         xhr.onload = () => resolve(xhr.responseText);
         xhr.onerror = () => reject(xhr.statusText);
         xhr.send()
-        // },)
     });
 }
 
-var banana = undefined;
-// promiseRequest()
-//     .then(
-//         (path='', method='GET', body) => {
-//             xhr.open(method, open(`${API_ROOT}/${path}`));
-//             xhr.send(body);
-//         }
-//     )
-//     .catch((dataFromReject) => {
-//             console.log(dataFromReject);
-//         });
 
 class GoodsItem {
     constructor(item) {
@@ -73,42 +30,48 @@ class GoodsItem {
 class GoodsList {
     constructor() {
         this.goods = [];
+        this.sumOfGoods = undefined;
     }
 
     fetchData() {
-        promiseRequest('catalogData.json')
+        promisedRequest('catalogData.json')
             .then((answerFromServer) => {
-                // answerFromServer.ForEach( e => {
                 this.goods = JSON.parse(answerFromServer);
-                banana = JSON.parse(answerFromServer);
-                console.log(this.goods)
                 this.render()
-                // banana = answerFromServer;
-                // console.log(banana);
-                // console.log(this.goods);
-                // console.log(JSON.parse(answerFromServer))
-                // console.log(`banana = ${JSON.stringify(answerFromServer)}`)
-                // JSON.parse(answerFromServer).forEach(element => {this.goods = element});
+                // return this.goods;
             })
+            // .then((answerFromServer) => {
+            //     console.log(this.goods);
+            //     this.goods = JSON.parse(answerFromServer);
+            //     // this.getTotalPrice()
+            //     return this.goods
+            // })
             .catch((error) => {
                 console.log(error);
             })
-        // request('catalogData.json', (goods) => {
-        //     this.goods = goods;
-        //     callback();
-        // });
     }
 
     getTotalPrice() {
-        const sum = this.goods.reduce(
-            (accumulator, currentElement) => accumulator + currentElement.price,
-            0
-        );
-        console.log(sum)
+        promisedRequest('catalogData.json')
+            .then((answerFromServer) => {
+                this.goods = JSON.parse(answerFromServer);
+                const sum = this.goods.reduce(
+                    (accumulator, currentElement) => accumulator + currentElement.price,
+                    0
+                );
+                this.sumOfGoods = sum;
+            })
+        // console.log(sum);
+        // return this.sum
+        // console.log(this.goods);
+        // const sum = this.goods.reduce(
+        //     (accumulator, currentElement) => accumulator + currentElement.price,
+        //     0
+        // );
+        // console.log(sum)
     }
 
     render() {
-        // console.log(this.goods)
         const goodsString = this.goods.map(element => {
 
             const item = new GoodsItem(element);
@@ -187,5 +150,5 @@ class BasketItem {
 const list = new GoodsList();
 list.fetchData();
 // list.render();
-// list.getTotalPrice();
+list.getTotalPrice();
 console.log(list);
