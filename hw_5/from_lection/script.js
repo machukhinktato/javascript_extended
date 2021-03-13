@@ -2,11 +2,11 @@ const API_ROOT = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-st
 const request = (path = '', method = 'GET', body) => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        
+
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    console.log({ response: xhr.responseText });
+                    console.log({response: xhr.responseText});
                     resolve(JSON.parse(xhr.responseText));
                 } else {
                     console.error(xhr.responseText);
@@ -14,9 +14,9 @@ const request = (path = '', method = 'GET', body) => {
                 }
             }
         }
-        
+
         xhr.open(method, `${API_ROOT}/${path}`);
-        
+
         xhr.send(body);
     });
 }
@@ -35,7 +35,7 @@ new Vue({
     computed: {
         filteredGoods() {
             const regexp = new RegExp(this.searchValue, 'i');
-            return this.goods.filter((goodsItem) => 
+            return this.goods.filter((goodsItem) =>
                 regexp.test(goodsItem.product_name)
             );
         },
@@ -52,20 +52,20 @@ new Vue({
                 const res = await fetch(`${API_ROOT}/catalogData.json`);
                 const goods = await res.json();
                 this.goods = goods;
-            } catch (err) {
+            } catch (error) {
                 console.log(`Can't fetch data`, error);
                 throw new Error(error);
             }
         },
-        fetchBasket() {
-            request('getBasket.json')
-                .then((goods) => {
-                    this.basketGoods = goods.contents;
-                    console.log('basket', this.basketGoods);
-                })
-                .catch((error) => {
-                    console.log(`Can't fetch basket data`, error);
-                });
+        async fetchBasket() {
+            try {
+                const res = await fetch(`${API_ROOT}/getBasket.json`);
+                const goods = await res.json();
+                this.basketGoods = goods.contents;
+            } catch (error) {
+                console.log(`Can't fetch data`, error);
+                throw new Error(error);
+            }
         },
         addItem(item) {
             request('addToBasket.json')
@@ -75,7 +75,7 @@ new Vue({
                         if (itemIndex > -1) {
                             this.basketGoods[itemIndex].quantity += 1;
                         } else {
-                            this.basketGoods.push({ ...item, quantity: 1 });
+                            this.basketGoods.push({...item, quantity: 1});
                         }
                         console.log(this.basketGoods);
                     } else {
