@@ -57,6 +57,12 @@ new Vue({
                 throw new Error(error);
             }
         },
+        renderCart() {
+            let modal = document.querySelector('.modal');
+            let btn = document.querySelector('.cartButton')
+            // console.log('modal');
+            modal.style.display = 'block';
+        },
         async fetchBasket() {
             try {
                 const res = await fetch(`${API_ROOT}/getBasket.json`);
