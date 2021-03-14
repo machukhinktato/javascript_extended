@@ -25,7 +25,6 @@ new Vue({
     el: '#app',
     data: {
         goods: [],
-        tests:[],
         searchValue: '',
         basketGoods: [],
     },
@@ -58,13 +57,15 @@ new Vue({
                 throw new Error(error);
             }
         },
-        renderCart() {
+        isVisibleCart() {
             let modal = document.querySelector('.modal');
+            let visible = modal.style.display;
             modal.style.display = 'block';
-        },
-        closeModal() {
-            let modal = document.querySelector('.modal');
-            modal.style.display = 'none';
+            if (visible === 'block') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'block';
+            }
         },
         async fetchBasket() {
             try {
