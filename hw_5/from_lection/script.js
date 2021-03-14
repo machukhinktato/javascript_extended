@@ -27,7 +27,6 @@ new Vue({
         goods: [],
         searchValue: '',
         basketGoods: [],
-        totalPrice: 0,
     },
     created() {
         this.fetchGoods();
@@ -40,9 +39,9 @@ new Vue({
                 regexp.test(goodsItem.product_name)
             );
         },
-        total() {
-            return this.goods.reduce(
-                (accumulator, currentElement) => accumulator + currentElement.price,
+        basketTotal() {
+            return this.basketGoods.reduce(
+                (accumulator, currentElement) => accumulator + currentElement.price * currentElement.quantity,
                 0
             );
         }
