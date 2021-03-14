@@ -25,6 +25,7 @@ new Vue({
     el: '#app',
     data: {
         goods: [],
+        tests:[],
         searchValue: '',
         basketGoods: [],
     },
@@ -57,11 +58,11 @@ new Vue({
                 throw new Error(error);
             }
         },
-        renderCart(event) {
+        renderCart() {
             let modal = document.querySelector('.modal');
             modal.style.display = 'block';
         },
-        closeModal(event) {
+        closeModal() {
             let modal = document.querySelector('.modal');
             modal.style.display = 'none';
         },
