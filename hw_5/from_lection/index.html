@@ -22,8 +22,18 @@
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span @click="closeModal" class="close">&times;</span>
-                <p>Some text in the Modal..</p>
+                <div class="item" v-for="item in basketGoods">
+                    <p>Наименование: {{item.product_name}}</p>
+                    <p>Цена за штуку: {{item.price}}</p>
+                    <p>Количество: {{item.quantity}}</p>
+                    <p>Общая стоимость: {{item.price * item.quantity}}</p>
+                </div>
+                <div v-for="item in basketGoods">
+                    Всего в корзине товара на сумму: {{item.price++}}
+                </div>
             </div>
+
+
         </div>
 
     </header>

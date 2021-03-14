@@ -27,7 +27,6 @@ new Vue({
         goods: [],
         searchValue: '',
         basketGoods: [],
-        flag: false,
     },
     created() {
         this.fetchGoods();
@@ -61,20 +60,10 @@ new Vue({
         renderCart(event) {
             let modal = document.querySelector('.modal');
             modal.style.display = 'block';
-            console.log(event.target)
-            // if (this.flag === false) {
-            // this.flag = true;
-            // } else {
-            //     window.onclick = () => modal.style.display = 'none';
-            //     this.flag = false;
-            // }
         },
         closeModal(event) {
             let modal = document.querySelector('.modal');
-            if (this.flag === true) {
-                modal.style.display = 'none';
-            }
-
+            modal.style.display = 'none';
         },
         async fetchBasket() {
             try {
