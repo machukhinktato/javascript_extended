@@ -27,6 +27,7 @@ new Vue({
         goods: [],
         searchValue: '',
         basketGoods: [],
+        totalPrice: 0,
     },
     created() {
         this.fetchGoods();
