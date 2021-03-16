@@ -6,7 +6,7 @@ const request = (path = '', method = 'GET', body) => {
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    console.log({response: xhr.responseText});
+                    console.log({ response: xhr.responseText });
                     resolve(JSON.parse(xhr.responseText));
                 } else {
                     console.error(xhr.responseText);
@@ -21,17 +21,6 @@ const request = (path = '', method = 'GET', body) => {
     });
 }
 
-Vue.component('search-item', {
-    props: ['searchValue'],
-    template: `
-    <header>
-        <span class="logo">eShop</span>
-    <input type="text" value="searchValue" v-on:input="handleInput"/>
-    
-    `
-})
-
-
 Vue.component('goods-list', {
     props: ['filteredGoods'],
     template: `
@@ -44,6 +33,11 @@ Vue.component('goods-list', {
             <goods-empty v-if="filteredGoods.length === 0" />
         </section>
     `,
+    // methods: {
+    //     handleAddItem(item) {
+    //         this.$emit('add-item', item);
+    //     }
+    // }
 });
 
 Vue.component('goods-item', {
@@ -55,6 +49,11 @@ Vue.component('goods-item', {
             <button name="add-to-basket" v-on:click.prevent="$emit('add', item)">Add to basket</button>
         </div>
     `,
+    // methods: {
+    //     handleAdd() {
+    //         this.$emit('add', this.item);
+    //     }
+    // }
 });
 
 Vue.component('goods-empty', {
@@ -121,7 +120,7 @@ new Vue({
                         if (itemIndex > -1) {
                             this.basketGoods[itemIndex].quantity += 1;
                         } else {
-                            this.basketGoods.push({...item, quantity: 1});
+                            this.basketGoods.push({ ...item, quantity: 1 });
                         }
                         console.log(this.basketGoods);
                     } else {

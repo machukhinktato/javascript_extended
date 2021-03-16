@@ -14,9 +14,7 @@
 <div id="app">
     <header>
         <span class="logo">eShop</span>
-<!--        <input type="text" class="search" v-model="searchValue"/>-->
-        <search-item/>
-
+        <input type="text" class="search" v-model="searchValue"/>
         <button class="basket-button" v-on:click="isBasketVisible = !isBasketVisible">Корзина</button>
         <div v-if="isBasketVisible" class="basket">
             <div class="basket-item" v-for="item in basketGoods">
