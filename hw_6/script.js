@@ -21,15 +21,22 @@ const request = (path = '', method = 'GET', body) => {
     });
 }
 
-Vue.component('search-item', {
-    props: ['searchValue'],
+Vue.component('search', {
+    // props: ['searchValue'],
     template: `
-    <header>
-        <span class="logo">eShop</span>
-    <input type="text" value="searchValue" v-on:input="handleInput"/>
-    
-    `
-})
+    <input type="text" class="search" v-model:value  v-on:input="$emit('search', $event)"/>
+    `,
+    data() {
+        return {
+            value: '',
+        };
+    },
+    methods: {
+        handleSearch(e) {
+            this.searchValue = e.target.value;
+        }
+    }
+});
 
 
 Vue.component('goods-list', {
@@ -76,6 +83,7 @@ new Vue({
     created() {
         this.fetchGoods();
         this.fetchBasket();
+        console.log('this is', this.searchValue);
     },
     computed: {
         filteredGoods() {
