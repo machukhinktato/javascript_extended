@@ -29,7 +29,7 @@
 <!--            <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>-->
 <!--        </div>-->
 
-        <basket v-on:click="isBasketVisible = !isBasketVisible"></basket>
+        <basket v-on:open-basket="isBasketVisible = !isBasketVisible"></basket>
 
     </header>
     <main>

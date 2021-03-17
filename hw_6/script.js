@@ -29,10 +29,12 @@ Vue.component('search-item', {
 });
 
 Vue.component('basket', {
-    props: ['isBasketVisible'],
+    // props: ['isBasketVisible'],
     template: `
     <section>
-       <button class="basket-button" v-on:click="isBasketVisible = !isBasketVisible">Корзина</button>
+       <button class="basket-button" v-on:click="$emit('openBasket')">
+       Корзина
+       </button>
 <!--        <div v-if="isBasketVisible" class="basket">-->
 <!--            <div class="basket-item" v-for="item in basketGoods">-->
 <!--                <h4>{{ item.product_name }}</h4>-->
