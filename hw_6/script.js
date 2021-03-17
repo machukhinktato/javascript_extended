@@ -28,6 +28,25 @@ Vue.component('search-item', {
     `
 });
 
+Vue.component('basket', {
+    props: ['isBasketVisible'],
+    template: `
+    <section>
+       <button class="basket-button" v-on:click="isBasketVisible = !isBasketVisible">Корзина</button>
+<!--        <div v-if="isBasketVisible" class="basket">-->
+<!--            <div class="basket-item" v-for="item in basketGoods">-->
+<!--                <h4>{{ item.product_name }}</h4>-->
+<!--                <p>{{ item.price }} x {{ item.quantity }}</p>-->
+<!--                <button v-on:click="removeItem(item.id_product)">-->
+<!--                    Удалить-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>-->
+<!--        </div>-->
+    </section>
+   `
+});
+
 
 Vue.component('goods-list', {
     props: ['filteredGoods'],
