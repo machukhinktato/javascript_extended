@@ -29,23 +29,23 @@ Vue.component('search-item', {
 });
 
 Vue.component('basket', {
-    // props: ['isBasketVisible'],
+    props: ['isBasketVisible', 'basketGoods'],
     template: `
-    <section>
-       <button class="basket-button" v-on:click="$emit('openBasket')">
-       Корзина
-       </button>
-<!--        <div v-if="isBasketVisible" class="basket">-->
-<!--            <div class="basket-item" v-for="item in basketGoods">-->
-<!--                <h4>{{ item.product_name }}</h4>-->
-<!--                <p>{{ item.price }} x {{ item.quantity }}</p>-->
-<!--                <button v-on:click="removeItem(item.id_product)">-->
-<!--                    Удалить-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>-->
-<!--        </div>-->
-    </section>
+        <section>
+               <button class="basket-button" v-on:click="$emit('openBasket', !isBasketVisible)">
+               Корзина
+               </button>
+                <div v-if="isBasketVisible" class="basket">
+                    <div class="basket-item" v-for="item in basketGoods">
+                        <h4>{{ item.product_name }}</h4>
+                        <p>{{ item.price }} x {{ item.quantity }}</p>
+                        <button v-on:click="removeItem(item.id_product)">
+                            Удалить
+                        </button>
+                    </div>
+                    <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>
+                </div>
+        </section>
    `
 });
 
@@ -144,10 +144,14 @@ new Vue({
                             this.basketGoods.push({...item, quantity: 1});
                         }
                         console.log(this.basketGoods);
+                        console.log(this.isBasketVisible);
                     } else {
                         console.error(`Can't add item to basket`, item, this.basketGoods);
                     }
                 })
+        },
+        openBasket(value) {
+            this.isBasketVisible = value;
         },
         removeItem(id) {
             request('deleteFromBasket.json')
