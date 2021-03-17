@@ -21,21 +21,11 @@ const request = (path = '', method = 'GET', body) => {
     });
 }
 
-Vue.component('search', {
-    // props: ['searchValue'],
+Vue.component('search-item', {
+    props: ['searchValue'],
     template: `
-    <input type="text" class="search" v-model:value  v-on:input="$emit('search', $event)"/>
-    `,
-    data() {
-        return {
-            value: '',
-        };
-    },
-    methods: {
-        handleSearch(e) {
-            this.searchValue = e.target.value;
-        }
-    }
+    <input v-bind:value="searchValue" v-on:input="$emit('input', $event.target.value)" >
+    `
 });
 
 
@@ -45,6 +35,7 @@ Vue.component('goods-list', {
         <section class="goods">
             <goods-item
                 v-for="item in filteredGoods"
+                v-bind:key="item.id_product"
                 v-bind:item="item"
                 v-on:add="$emit('add-item', $event)"
             />
