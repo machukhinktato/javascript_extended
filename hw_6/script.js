@@ -29,10 +29,10 @@ Vue.component('search-item', {
 });
 
 Vue.component('basket', {
-    props: ['isBasketVisible', 'basketGoods'],
+    props: ['basketGoods'],
     template: `
         <section>
-               <button class="basket-button" v-on:click="$emit('openBasket', !isBasketVisible)">
+               <button class="basket-button" v-on:click="$emit('open-basket', isBasketVisible = !isBasketVisible)">
                Корзина
                </button>
                 <div v-if="isBasketVisible" class="basket">
@@ -46,7 +46,17 @@ Vue.component('basket', {
                     <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>
                 </div>
         </section>
-   `
+   `,
+    data() {
+        return {
+            isBasketVisible: false,
+        };
+    },
+    methods: {
+        handleInput(value) {
+            this.isBasketVisible = !this.isBasketVisible;
+        }
+    }
 });
 
 
@@ -90,7 +100,7 @@ new Vue({
         goods: [],
         searchValue: '',
         basketGoods: [],
-        isBasketVisible: false,
+      //  isBasketVisible: false,
     },
     created() {
         this.fetchGoods();
@@ -104,6 +114,9 @@ new Vue({
                 regexp.test(goodsItem.product_name)
             );
         },
+      //  basketToggle() {
+      //      this.isBasketVisible = !this.isBasketVisible
+      //  },
         total() {
             return this.basketGoods.reduce(
                 (accumulator, currentElement) =>
