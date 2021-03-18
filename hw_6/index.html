@@ -8,28 +8,18 @@
     <script src="script.js" defer></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap&subset=cyrillic"
           rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <div id="app">
     <header>
         <span class="logo">eShop</span>
-<!--                <input type="text" class="search" v-model="searchValue"/>-->
         <search-item v-model="searchValue"></search-item>
-
-<!--        <button class="basket-button" v-on:click="isBasketVisible = !isBasketVisible">Корзина</button>-->
-<!--        <div v-if="isBasketVisible" class="basket">-->
-<!--            <div class="basket-item" v-for="item in basketGoods">-->
-<!--                <h4>{{ item.product_name }}</h4>-->
-<!--                <p>{{ item.price }} x {{ item.quantity }}</p>-->
-<!--                <button v-on:click="removeItem(item.id_product)">-->
-<!--                    Удалить-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>-->
-<!--        </div>-->
-
-        <basket></basket>
+        <basket 
+        v-bind:basket-goods="basketGoods"
+        v-bind:total="total"
+        v-bind:remove-item="removeItem">
+        </basket>
 
     </header>
     <main>
