@@ -29,17 +29,17 @@ Vue.component('search-item', {
 });
 
 Vue.component('basket', {
-    props: ['basketGoods', 'total'],
+    props: ['basketGoods', 'total', 'removeItem'],
     template: `
         <section>
-            <button class="basket-button" v-on:click="$emit('open-basket', isBasketVisible = !isBasketVisible)">
+            <button class="basket-button" v-on:click="handleToggle">
             Корзина
             </button>
                 <div v-if="isBasketVisible" class="basket">
                     <div class="basket-item" v-for="item in basketGoods">
                         <h4>{{ item.product_name }}</h4>
                         <p>{{ item.price }} x {{ item.quantity }}</p>
-                        <button v-on:click="removeItem(item.id_product)">
+                        <button v-on:click="$emit(removeItem(item))">
                             Удалить
                         </button>
                     </div>
@@ -53,10 +53,10 @@ Vue.component('basket', {
         };
     },
     methods: {
-        handleInput(value) {
+        handleToggle(value) {
             this.isBasketVisible = !this.isBasketVisible;
         }
-    }
+    },
 });
 
 
@@ -161,16 +161,16 @@ new Vue({
         openBasket(value) {
             this.isBasketVisible = value;
         },
-        removeItem(id) {
-            request('deleteFromBasket.json')
-                .then((response) => {
+        async removeItem(item) {
+            try {
+                const res = await fetch(`${API_ROOT}/deleteFromBasket.json`);
+                const response = await res.json();
                     if (response.result !== 0) {
-                        this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id_product !== parseInt(id));
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't remove item from basket`, item, this.basketGoods);
-                    }
-                });
+                        this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id_product !== parseInt(item.id_product));
+            }
+        } catch(err) {
+            console.error(`Can't remove item from basket`, item, this.basketGoods, err);
         }
+        },
     },
 });
