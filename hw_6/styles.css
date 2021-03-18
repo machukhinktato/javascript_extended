@@ -79,3 +79,15 @@ header {
 .basket-total {
     margin-top: 35px;
 }
+
+.alert-box {
+    padding: 10px 20px;
+    background: #f3beb8;
+    border: 1px solid #f09898;
+    margin-top: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.basket-notify {
+    text-align: center;
+}

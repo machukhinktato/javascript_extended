@@ -142,7 +142,7 @@ new Vue({
     methods: {
         async fetchGoods() {
             try {
-                const res = await fetch(`${API_ROOT}/catalogData.json`);
+                // const res = await fetch(`${API_ROOT}/catalogData.json`);
                 const goods = await res.json();
                 this.goods = goods;
             } catch (err) {
