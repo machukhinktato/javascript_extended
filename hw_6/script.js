@@ -21,6 +21,15 @@ const request = (path = '', method = 'GET', body) => {
     });
 }
 
+Vue.component('alert-box', {
+  template: `
+    <div class="alert-box">
+      <strong>Ошибка!</strong>
+      <slot></slot>
+    </div>
+  `
+});
+
 Vue.component('search-item', {
     props: ['searchValue'],
     template: `
@@ -35,16 +44,19 @@ Vue.component('basket', {
             <button class="basket-button" v-on:click="handleToggle">
             Корзина
             </button>
+
                 <div v-if="isBasketVisible" class="basket">
                     <div class="basket-item" v-for="item in basketGoods">
                         <h4>{{ item.product_name }}</h4>
                         <p>{{ item.price }} x {{ item.quantity }}</p>
-                        <button v-on:click="$emit(removeItem(item))">
+                        <button v-on:click="removeItem(item)">
                             Удалить
                         </button>
                     </div>
-                    <p class="basket-total">Общая стоимость: <b>{{ total }}</b></p>
-            </div>
+                    <p v-if="total != 0" class="basket-total">Общая стоимость: <b>{{ total }}</b></p>
+                    <p v-if="total === 0" class="basket-notify">Корзина пуста</p>
+                </div>
+
         </section>
    `,
     data() {
@@ -61,16 +73,21 @@ Vue.component('basket', {
 
 
 Vue.component('goods-list', {
-    props: ['filteredGoods'],
+    props: ['filteredGoods', 'error'],
     template: `
         <section class="goods">
-            <goods-item
+
+            <goods-item v-if="filteredGoods"
                 v-for="item in filteredGoods"
                 v-bind:key="item.id_product"
                 v-bind:item="item"
                 v-on:add="$emit('add-item', $event)"
             />
-            <goods-empty v-if="filteredGoods.length === 0" />
+            <goods-empty v-if="filteredGoods.length === 0 && !error" />
+            <alert-box v-if="error==true">
+                Произошло что-то плохое.
+            </alert-box>
+
         </section>
     `,
 });
@@ -100,6 +117,7 @@ new Vue({
         goods: [],
         searchValue: '',
         basketGoods: [],
+        error: false,
     },
     created() {
         this.fetchGoods();
@@ -108,6 +126,7 @@ new Vue({
     computed: {
         filteredGoods() {
             const regexp = new RegExp(this.searchValue, 'i');
+            console.log(this.goods)
             return this.goods.filter((goodsItem) =>
                 regexp.test(goodsItem.product_name)
             );
@@ -127,39 +146,36 @@ new Vue({
                 const goods = await res.json();
                 this.goods = goods;
             } catch (err) {
+                console.log(`Can't fetch data`, err);
+                this.error = true
+                throw new Error(err);
+            }
+        },
+        async fetchBasket() {
+            try {
+                const res = await fetch(`${API_ROOT}/getBasket.json`);
+                const goods = await res.json();
+                this.basketGoods = goods.contents;
+            } catch (error) {
                 console.log(`Can't fetch data`, error);
                 throw new Error(error);
             }
         },
-        fetchBasket() {
-            request('getBasket.json')
-                .then((goods) => {
-                    this.basketGoods = goods.contents;
-                    console.log('basket', this.basketGoods);
-                })
-                .catch((error) => {
-                    console.log(`Can't fetch basket data`, error);
-                });
-        },
-        addItem(item) {
-            request('addToBasket.json')
-                .then((response) => {
+        async addItem(item) {
+            try {
+                const res = await fetch(`${API_ROOT}/addToBasket.json`);
+                const response = await res.json();
                     if (response.result !== 0) {
                         const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id_product === item.id_product);
                         if (itemIndex > -1) {
                             this.basketGoods[itemIndex].quantity += 1;
                         } else {
                             this.basketGoods.push({...item, quantity: 1});
-                        }
-                        console.log(this.basketGoods);
-                        console.log(this.isBasketVisible);
-                    } else {
-                        console.error(`Can't add item to basket`, item, this.basketGoods);
-                    }
-                })
-        },
-        openBasket(value) {
-            this.isBasketVisible = value;
+                        console.log(itemIndex)
+                        }}
+            } catch (err) {
+                console.error(`Can't add item to basket`, item, this.basketGoods, err);;
+            }
         },
         async removeItem(item) {
             try {
