@@ -1,7 +1,7 @@
-const http = require('http');
-const static = require('node-static');
+const express = require('express');
+const app = express();
+app.use(express.static('.'));
 
-const file = new static.Server('.');
-http.createServer((req, res) => {
-    file.serve(req, res);
-}).listen(8000);
+app.listen(8000, () => {
+    console.log(`server is running at port 8000`);
+})
