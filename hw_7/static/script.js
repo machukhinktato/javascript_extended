@@ -141,16 +141,15 @@ new Vue({
                 throw new Error(error);
             }
         },
-        fetchBasket() {
-            request('basket-goods')
-                .then((goods) => {
-                    this.basketGoods = goods.contents;
-                    console.log('basket', this.basketGoods);
-                })
-                .catch((error) => {
-                    console.log(`Can't fetch basket data`, error);
-                    this.isError = true;
-                });
+        async fetchBasket() {
+            try {
+                const res = await fetch(`${API_ROOT}/basket-goods`);
+                const goods = await res.json();
+                this.basketGoods = goods.contents;
+            } catch (error) {
+                console.log(`Can't fetch data`, error);
+                throw new Error(error);
+            }
         },
         async addItem(item) {
             try {
@@ -176,6 +175,18 @@ new Vue({
             } catch (err) {
                 console.error(`Can't add item to basket`, item, this.basketGoods, err);
             }
+        },
+        async removeItem(item) {
+            try {
+                const res = await fetch(`${API_ROOT}/deleteFromBasket`);
+                const response = await res.json();
+                    if (response.result !== 0) {
+                        this.basketGoods = this.basketGoods.filter(
+                            (goodsItem) => goodsItem.id !== parseInt(item.id));
+            }
+        } catch(err) {
+            console.error(`Can't remove item from basket`, item, this.basketGoods, err);
+        }
         },
         handleRemoveItem(id) {
             request('deleteFromBasket.json')
