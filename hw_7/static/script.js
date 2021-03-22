@@ -2,11 +2,11 @@ const API_ROOT = 'http://localhost:3000/api';
 const request = (path = '', method = 'GET', body) => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        
+
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    console.log({ response: xhr.responseText });
+                    console.log({response: xhr.responseText});
                     resolve(JSON.parse(xhr.responseText));
                 } else {
                     console.error(xhr.responseText);
@@ -16,7 +16,7 @@ const request = (path = '', method = 'GET', body) => {
         }
 
         xhr.open(method, `${API_ROOT}/${path}`);
-        
+
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.send(body);
@@ -117,13 +117,13 @@ new Vue({
     computed: {
         filteredGoods() {
             const regexp = new RegExp(this.searchValue, 'i');
-            return this.goods.filter((goodsItem) => 
+            return this.goods.filter((goodsItem) =>
                 regexp.test(goodsItem.title)
             );
         },
         total() {
             return this.basketGoods.reduce(
-                (accumulator, currentElement) => 
+                (accumulator, currentElement) =>
                     accumulator + (currentElement.price * currentElement.quantity),
                 0
             );
@@ -152,43 +152,30 @@ new Vue({
                     this.isError = true;
                 });
         },
-        oldAddItem(item) {
-            request('basket-goods', 'POST', JSON.stringify(item))
-                .then((response) => {
-                    if (response.result !== 0) {
-                        const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id === item.id);
-                        if (itemIndex > -1) {
-                            this.basketGoods[itemIndex].quantity += 1;
-                        } else {
-                            this.basketGoods.push({ ...item, quantity: 1 });
+        async addItem(item) {
+            try {
+                const res = await fetch(
+                    `${API_ROOT}/basket-goods`,{
+                        method: 'POST',
+                        body: JSON.stringify(item),
+                        headers: {
+                            'Content-Type': 'application/json'
                         }
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't add item to basket`, item, this.basketGoods);
                     }
-                })
-        },
-        addItem(item) {
-            fetch(`${API_ROOT}/basket-goods`, {
-                method: 'POST',
-                body: JSON.stringify(item),
-                headers: {
-                    'Content-Type': 'application/json'
+                );
+                const response = await res.json();
+                if (response.result !== 0) {
+                    const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id === item.id);
+                    if (itemIndex > -1) {
+                        this.basketGoods[itemIndex].quantity += 1;
+                    } else {
+                        this.basketGoods.push({...item, quantity: 1});
+                        console.log(itemIndex)
+                    }
                 }
-            })
-                .then((response) => {
-                    if (response.result !== 0) {
-                        const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id === item.id);
-                        if (itemIndex > -1) {
-                            this.basketGoods[itemIndex].quantity += 1;
-                        } else {
-                            this.basketGoods.push({ ...item, quantity: 1 });
-                        }
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't add item to basket`, item, this.basketGoods);
-                    }
-                })
+            } catch (err) {
+                console.error(`Can't add item to basket`, item, this.basketGoods, err);
+            }
         },
         handleRemoveItem(id) {
             request('deleteFromBasket.json')
@@ -202,4 +189,5 @@ new Vue({
                 });
         }
     },
-});
+})
+;
