@@ -176,35 +176,17 @@ new Vue({
                 console.error(`Can't add item to basket`, item, this.basketGoods, err);
             }
         },
-        async handleRemoveItem(item) {
-            try {
-                const res = await fetch(
-                    `${API_ROOT}/basket-goods/`, {
-                    method: 'DELETE',
-                    body: JSON.stringify(item),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const response = await res.json();
-                if (response.result !== 0) {
-                    this.basketGoods = this.basketGoods.filter(
-                        (goodsItem) => goodsItem.id !== parseInt(item.id));
-                }
-            } catch (err) {
-                console.error(`Can't remove item from basket`, item, this.basketGoods, err);
+        async handleRemoveItem(id) {
+            const rawResponse = await fetch(`${API_ROOT}/api/basket-goods/${id}`, {
+                method: 'DELETE',
+            })
+            const response = rawResponse.json();
+            if (response.result !== 0) {
+                this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id !== parseInt(id));
+                console.log(this.basketGoods);
+            } else {
+                console.error("Can't remove item from basket", item, this.basketGoods);
             }
-        },
-        banana(id) {
-            request('deleteFromBasket.json')
-                .then((response) => {
-                    if (response.result !== 0) {
-                        this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id !== parseInt(id));
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't remove item from basket`, item, this.basketGoods);
-                    }
-                });
         }
     },
 })
