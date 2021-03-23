@@ -52,7 +52,7 @@ app.post('/api/basket-goods', (
         const basket = JSON.parse(data);
         const item = request.body;
         console.log(request.body)
-        basket.push(item);
+
 
         fs.writeFile('./basket-goods.json', JSON.stringify(basket), (err) => {
             if (err) {
@@ -83,7 +83,7 @@ app.delete('api/basket-goods/:id', (req, res) => {
 
         basket = basket.filter((goodsItem) => goodsItem.id !== id);
 
-        fs.writeFile('./basket-goods.json', 'utf8', (err, data) => {
+        fs.writeFile('./basket-goods.json', JSON.stringify(basket), (err) => {
             if (err) {
                 console.log('write basket-goods.json error!', err);
                 res.json({

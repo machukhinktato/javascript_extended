@@ -177,19 +177,15 @@ new Vue({
             }
         },
         async handleRemoveItem(id) {
-            try {
-                const rawResponse = await fetch(`${API_ROOT}/api/basket-goods/${id}`, {
-                    method: 'DELETE',
-                })
-                const response = rawResponse.json();
-                if (response.result !== 0) {
-                    this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id !== parseInt(id));
-                    console.log(this.basketGoods);
-                } else {
-                    console.error("Can't remove item from basket", item, this.basketGoods);
-                }
-            } catch (e) {
-                console.log(e);
+            const rawResponse = await fetch(`${API_ROOT}/basket-goods/${id}`, {
+                method: 'DELETE',
+            });
+            const response = await rawResponse.json();
+            if (response.result !== 0) {
+                this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id !== parseInt(id));
+                console.log(this.basketGoods);
+            } else {
+                console.error("Can't remove item from basket", item, this.basketGoods);
             }
         }
     },
