@@ -70,36 +70,34 @@ app.post('/api/basket-goods', (
 });
 
 
-app.delete(`/api/basket-goods/:id`, (
-    request, response) => {
-    console.log('basket-goods/:id DELETE handler', request.ip);
-    fs.readFile('./basket-goods.json', 'utf-8', (err, data) => {
+app.delete('api/basket-goods/:id', (req, res) => {
+    fs.readFile('./basket-goods.json', 'utf8', (err, data) => {
         if (err) {
-            console.log('Read basket-goods.json error!', err);
-            response.send('Read basket-goods.json error!');
+            console.log('read basket-goods.json error!', err);
+            res.send('read basket-goods.json error!');
             return;
         }
+        let basket = JSON.parse(data);
+        const id = parseInt(req.params.id);
+        console.log(req.params);
 
-        const basket = JSON.parse(data);
-        const item = request.body;
-        console.log(request.body)
-        basket.delete(item);
+        basket = basket.filter((goodsItem) => goodsItem.id !== id);
 
-        fs.writeFile('./basket-goods.json', JSON.stringify(basket), (err) => {
+        fs.writeFile('./basket-goods.json', 'utf8', (err, data) => {
             if (err) {
-                console.log('Write basket-goods.json error!', err);
-                response.json({
-                    status: 0,
-                    message: 'Write basket-goods.json error!',
-                    error: err,
+                console.log('write basket-goods.json error!', err);
+                res.json({
+                    status:0,
+                    message: 'write basket-goods.json error!',
+                    error: err
                 });
                 return;
             }
-            response.json({status: 1});
+            res.json({status:1})
         })
-    });
-})
 
+    })
+})
 app.listen(3000, () => {
     console.log('App is running @ localhost:3000')
 });

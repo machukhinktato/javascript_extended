@@ -154,7 +154,7 @@ new Vue({
         async addItem(item) {
             try {
                 const res = await fetch(
-                    `${API_ROOT}/basket-goods`,{
+                    `${API_ROOT}/basket-goods`, {
                         method: 'POST',
                         body: JSON.stringify(item),
                         headers: {
@@ -176,19 +176,26 @@ new Vue({
                 console.error(`Can't add item to basket`, item, this.basketGoods, err);
             }
         },
-        async removeItem(item) {
+        async handleRemoveItem(item) {
             try {
-                const res = await fetch(`${API_ROOT}/deleteFromBasket`);
+                const res = await fetch(
+                    `${API_ROOT}/basket-goods/`, {
+                    method: 'DELETE',
+                    body: JSON.stringify(item),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
                 const response = await res.json();
-                    if (response.result !== 0) {
-                        this.basketGoods = this.basketGoods.filter(
-                            (goodsItem) => goodsItem.id !== parseInt(item.id));
+                if (response.result !== 0) {
+                    this.basketGoods = this.basketGoods.filter(
+                        (goodsItem) => goodsItem.id !== parseInt(item.id));
+                }
+            } catch (err) {
+                console.error(`Can't remove item from basket`, item, this.basketGoods, err);
             }
-        } catch(err) {
-            console.error(`Can't remove item from basket`, item, this.basketGoods, err);
-        }
         },
-        handleRemoveItem(id) {
+        banana(id) {
             request('deleteFromBasket.json')
                 .then((response) => {
                     if (response.result !== 0) {
