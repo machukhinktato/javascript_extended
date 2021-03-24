@@ -131,17 +131,6 @@ new Vue({
                 throw new Error(error);
             }
         },
-        // fetchBasket() {
-        //     request('basket-goods')
-        //         .then((goods) => {
-        //             this.basketGoods = goods.contents;
-        //             console.log('basket', this.basketGoods);
-        //         })
-        //         .catch((error) => {
-        //             console.log(`Can't fetch basket data`, error);
-        //             this.isError = true;
-        //         });
-        // },
         async fetchBasket() {
             try {
                 const res = await fetch(`${API_ROOT}/basket-goods`);
