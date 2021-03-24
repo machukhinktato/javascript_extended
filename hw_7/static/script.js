@@ -23,8 +23,6 @@ const request = (path = '', method = 'GET', body) => {
     });
 }
 
-Vue.prototype.$eventHub = new Vue();
-
 Vue.component('goods-list', {
     props: ['filteredGoods'],
     template: `
@@ -38,9 +36,6 @@ Vue.component('goods-list', {
             <goods-empty v-if="filteredGoods.length === 0" />
         </section>
     `,
-    created() {
-        this.$eventHub.$emit('example-event', {someData: 'value'})
-    }
 });
 
 Vue.component('goods-item', {
@@ -136,55 +131,27 @@ new Vue({
                 throw new Error(error);
             }
         },
-        fetchBasket() {
-            request('basket-goods')
-                .then((goods) => {
-                    this.basketGoods = goods.contents;
-                    console.log('basket', this.basketGoods);
-                })
-                .catch((error) => {
-                    console.log(`Can't fetch basket data`, error);
-                    this.isError = true;
-                });
-        },
-        oldAddItem(item) {
-            request('basket-goods', 'POST', JSON.stringify(item))
-                .then((response) => {
-                    if (response.result !== 0) {
-                        const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id === item.id);
-                        if (itemIndex > -1) {
-                            this.basketGoods[itemIndex].quantity += 1;
-                        } else {
-                            this.basketGoods.push({...item, quantity: 1});
-                        }
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't add item to basket`, item, this.basketGoods);
-                    }
-                })
-        },
-        // addItem(item) {
-        //     fetch(`${API_ROOT}/basket-goods`, {
-        //         method: 'POST',
-        //         body: JSON.stringify(item),
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //         .then((response) => {
-        //             if (response.result !== 0) {
-        //                 const itemIndex = this.basketGoods.findIndex((goodsItem) => goodsItem.id === item.id);
-        //                 if (itemIndex > -1) {
-        //                     this.basketGoods[itemIndex].quantity += 1;
-        //                 } else {
-        //                     this.basketGoods.push({ ...item, quantity: 1 });
-        //                 }
-        //                 console.log(this.basketGoods);
-        //             } else {
-        //                 console.error(`Can't add item to basket`, item, this.basketGoods);
-        //             }
+        // fetchBasket() {
+        //     request('basket-goods')
+        //         .then((goods) => {
+        //             this.basketGoods = goods.contents;
+        //             console.log('basket', this.basketGoods);
         //         })
+        //         .catch((error) => {
+        //             console.log(`Can't fetch basket data`, error);
+        //             this.isError = true;
+        //         });
         // },
+        async fetchBasket() {
+            try {
+                const res = await fetch(`${API_ROOT}/basket-goods`);
+                const goods = await res.json();
+                this.basketGoods = goods.contents;
+            } catch (error) {
+                console.log(`Can't fetch basket data`, error);
+                throw new Error(error);
+            }
+        },
         async addItem(item) {
             try {
                 const res = await fetch(`${API_ROOT}/basket-goods`, {
@@ -207,17 +174,6 @@ new Vue({
             } catch (err) {
                 console.error(`Can't add item to basket`, item, this.basketGoods, err);
             }
-        },
-        oldHandleRemoveItem(id) {
-            request('deleteFromBasket.json')
-                .then((response) => {
-                    if (response.result !== 0) {
-                        this.basketGoods = this.basketGoods.filter((goodsItem) => goodsItem.id !== parseInt(id));
-                        console.log(this.basketGoods);
-                    } else {
-                        console.error(`Can't remove item from basket`, item, this.basketGoods);
-                    }
-                });
         },
         async handleRemoveItem(id) {
             const rawResponse = await fetch(`${API_ROOT}/basket-goods/${id}`, {
