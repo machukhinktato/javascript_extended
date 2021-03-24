@@ -2,6 +2,7 @@ const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
 const app = express();
+const log = require('./logger')
 
 app.use(express.static('./static'));
 app.use(express.json());
@@ -15,7 +16,6 @@ app.get('/api/goods', (request, response) => {
             response.send('Read goods.json error!');
             return;
         }
-
         return response.send(data);
     });
 });
@@ -69,6 +69,7 @@ app.post('/api/basket-goods', (request, response) => {
                 });
                 return;
             }
+            log('ADD', item.id);
             response.json({ status: 1 });
         })
     });
@@ -87,6 +88,7 @@ app.delete('/api/basket-goods/:id', (req, res) => {
         console.log(req.params);
 
         basket = basket.filter((goodsItem) => goodsItem.id !== id);
+        log('DELETE', id);
 
         fs.writeFile('./basket-goods.json', JSON.stringify(basket), (err) => {
             if (err) {
@@ -98,6 +100,7 @@ app.delete('/api/basket-goods/:id', (req, res) => {
                 });
                 return;
             }
+
             res.json({ status: 1 });
         })
     });
