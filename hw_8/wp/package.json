@@ -1,16 +1,17 @@
 {
-  "name": "webpack",
+  "name": "wp",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "webhook": "0.0.2",
+    "webhook-cli": "^0.1.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "webhook": "0.0.2",
-    "webhook-cli": "^0.1.3"
-  }
+  "license": "ISC"
 }
